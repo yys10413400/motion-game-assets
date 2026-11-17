@@ -101,6 +101,56 @@
       "file": "card-backgrounds/balloons-sky.png",
       "transparent": false,
       "prompt": "Recreate ONLY the scenery INSIDE the sky-blue balloon selection card in the reference: soft blue to pale lavender gradient with a few puffy soft cream cloud shapes low at the edges, a couple tiny gold stars at upper far corners and subtle white curved swooshes near outer edges. Wide horizontal 4:3 image, center 70 percent clean empty blue negative space. NO balloons, faces, strings, characters, central impact star, lettering, title, badge, button, card frame or UI. Entire rectangular image opaque. Backdrop layer to place behind separately supplied balloon art."
+    },
+    {
+      "file": "art/mugunghwa-game.png",
+      "transparent": true,
+      "prompt": "Match reference/original-design.png and art/balloon-game.png: glossy inflated candy-colored 3D toy style, strong white highlights, no outlines, glossy black eyes with white sparkles, pink blush, soft colored glow. Isolated group: glossy pink hibiscus (mugunghwa) flower mascot covering its eyes with leaf arms, coral-orange and sky-blue jelly-bean buddies tiptoeing toward it, a few floating petals. 3:2, no card, text or scenery."
+    },
+    {
+      "file": "card-backgrounds/flower-garden.png",
+      "transparent": false,
+      "prompt": "Match reference/original-design.png and art/balloon-game.png: glossy inflated candy-colored 3D toy style, strong white highlights, no outlines, glossy black eyes with white sparkles, pink blush, soft colored glow. Card background: pale pink to peach-cream gradient, puffy cream-pink clouds bottom corners, drifting glossy petals, small glossy yellow star with white swooshes in top corners, center empty. 4:3, opaque."
+    },
+    {
+      "file": "buttons/play-pink.png",
+      "transparent": true,
+      "prompt": "Match reference/original-design.png and art/balloon-game.png: glossy inflated candy-colored 3D toy style, strong white highlights, no outlines, glossy black eyes with white sparkles, pink blush, soft colored glow. One empty wide glossy hibiscus-pink rounded pill button like the reference start buttons, 4:1, no text or icon."
+    },
+    {
+      "file": "mugunghwa/img/scene.jpg",
+      "transparent": false,
+      "prompt": "Match reference/original-design.png and art/balloon-game.png: glossy inflated candy-colored 3D toy style, strong white highlights, no outlines, glossy black eyes with white sparkles, pink blush, soft colored glow. 16:9 spring meadow game background: horizon at about 45 percent height, soft blue sky with puffy clouds, rounded pastel hills (mint, butter yellow, pink) and glossy hibiscus bushes, open smooth grass field, center and lower middle empty."
+    },
+    {
+      "file": "mugunghwa/img/tagger-watch.png",
+      "transparent": true,
+      "prompt": "Match reference/original-design.png and art/balloon-game.png: glossy inflated candy-colored 3D toy style, strong white highlights, no outlines, glossy black eyes with white sparkles, pink blush, soft colored glow. Hibiscus flower mascot facing the viewer: five glossy pink petals around a magenta face, yellow stamen, green stem body with leaf arms on hips, playful 'gotcha' look."
+    },
+    {
+      "file": "mugunghwa/img/tagger-hide.png",
+      "transparent": true,
+      "prompt": "Match reference/original-design.png and art/balloon-game.png: glossy inflated candy-colored 3D toy style, strong white highlights, no outlines, glossy black eyes with white sparkles, pink blush, soft colored glow. Same hibiscus mascot seen from behind (green star-shaped sepal, leaf arms raised to its face), as if counting with eyes covered."
+    },
+    {
+      "file": "mugunghwa/img/buddy-orange-run.png",
+      "transparent": true,
+      "prompt": "Match reference/original-design.png and art/balloon-game.png: glossy inflated candy-colored 3D toy style, strong white highlights, no outlines, glossy black eyes with white sparkles, pink blush, soft colored glow. Round glossy coral-orange buddy with big happy smile, running in place with one foot lifted, white motion swooshes."
+    },
+    {
+      "file": "mugunghwa/img/buddy-orange-freeze.png",
+      "transparent": true,
+      "prompt": "Match reference/original-design.png and art/balloon-game.png: glossy inflated candy-colored 3D toy style, strong white highlights, no outlines, glossy black eyes with white sparkles, pink blush, soft colored glow. Same orange buddy frozen still, eyes squeezed shut and cheeks puffed, inside a glossy pale-cyan ice cube with frosty edges and two snowflakes."
+    },
+    {
+      "file": "mugunghwa/img/buddy-orange-caught.png",
+      "transparent": true,
+      "prompt": "Match reference/original-design.png and art/balloon-game.png: glossy inflated candy-colored 3D toy style, strong white highlights, no outlines, glossy black eyes with white sparkles, pink blush, soft colored glow. Same orange buddy just caught: tipping backward, swirly dizzy eyes, 'oops' mouth, arms up, glossy yellow stars circling its head."
+    },
+    {
+      "file": "mugunghwa/img/buddy-blue-*.png",
+      "transparent": true,
+      "prompt": "Not generated: made from the orange buddy images by recoloring only the orange body to sky blue (blush, mouth, stars and ice keep their colors)."
     }
   ]
 }

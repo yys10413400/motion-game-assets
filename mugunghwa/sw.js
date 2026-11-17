@@ -1,6 +1,6 @@
 // 홈 화면 앱: 한 번 열어 두면 인터넷이 없어도 놀 수 있게 파일을 기기에 보관해요.
 // 카메라 영상은 여기를 지나가지 않아요 (영상은 네트워크로 보내지 않아요).
-const CACHE = "mugunghwa-v2";
+const CACHE = "mugunghwa-v3";
 const CORE = [
   "./",
   "./index.html",
@@ -13,6 +13,12 @@ const CORE = [
   "./vendor/wasm/vision_wasm_internal.js",
   "./vendor/wasm/vision_wasm_internal.wasm",
   "./vendor/pose_landmarker_lite.task",
+  "./img/scene.jpg",
+  "./img/tagger-hide.png",
+  "./img/tagger-watch.png",
+  "./img/buddy-orange-run.png", "./img/buddy-orange-freeze.png", "./img/buddy-orange-caught.png",
+  "./img/buddy-blue-run.png", "./img/buddy-blue-freeze.png", "./img/buddy-blue-caught.png",
+  "../art/mugunghwa-game.png",
 ];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));

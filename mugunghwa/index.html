@@ -79,7 +79,9 @@
     color: var(--pink-deep); -webkit-text-stroke: 14px var(--pink-deep);
     text-shadow: 0 5px 0 var(--pink-deep), 0 9px 16px rgba(0, 0, 0, 0.25);
   }
-  .sub { margin: 6px 0 14px; font-size: clamp(17px, 2.2vw, 26px); color: #7a5a3a; }
+  .hero { display: block; margin: -6px auto 2px; height: clamp(56px, 11vh, 150px); max-width: 80%; object-fit: contain; }
+  @media (max-height: 560px) { .hero { display: none; } }
+  .sub { margin: 4px 0 10px; font-size: clamp(17px, 2.2vw, 26px); color: #7a5a3a; }
   .rules {
     display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 16px;
   }
@@ -188,6 +190,7 @@
 <div class="screen" id="home">
   <div class="panel">
     <a class="back-link" id="backLink" href="../손으로놀자.html">← 모션게임</a>
+    <img class="hero" src="../art/mugunghwa-game.png" alt="">
     <h1 class="otitle" data-t="무궁화 꽃이 피었습니다">무궁화 꽃이 피었습니다</h1>
     <p class="sub">카메라가 술래예요! 먼저 술래에게 도착하면 이겨요</p>
     <div class="rules">
@@ -496,10 +499,10 @@ const playerCount = () => +settings.players;
 const motionOf = i => (G.sim && G.sim[i] != null) ? G.sim[i] : bodies[i].motion;
 const seen = i => (G.sim && G.sim[i] != null) ? true : bodies[i].visible(performance.now() / 1000);
 const COLORS = [
-  { main: "#ff6b4a", deep: "#c2401f", light: "#ffd2c4", name: "1P" },
-  { main: "#3a7bea", deep: "#1f4bb0", light: "#cfe0ff", name: "2P" },
+  { main: "#ff6b4a", deep: "#c2401f", light: "#ffd2c4", name: "1P", sprite: "orange" },
+  { main: "#3a7bea", deep: "#1f4bb0", light: "#cfe0ff", name: "2P", sprite: "blue" },
 ];
-const SINGLE_COLOR = { main: "#ff8a3d", deep: "#c25a14", light: "#ffe0c4", name: "나" };
+const SINGLE_COLOR = { main: "#ff8a3d", deep: "#c25a14", light: "#ffe0c4", name: "나", sprite: "orange" };
 const colorOf = i => playerCount() === 1 ? SINGLE_COLOR : COLORS[i];
 
 function show(id) {
@@ -755,7 +758,7 @@ function step(dt) {
     if (watching && !p.caughtThisRed && seen(i)) {
       p.over = m > L.th ? p.over + dt : Math.max(0, p.over - dt * 0.5);
       if (p.over >= L.hold) {
-        p.caughtThisRed = true; p.caught++; p.hurtUntil = t + 0.9;
+        p.caughtThisRed = true; p.caught++; p.hurtUntil = t + 1.3;
         p.p = Math.max(0, p.p - L.back);
         G.popups.push({ i, text: "걸렸다!", t0: t });
         sfx.caught();
@@ -817,12 +820,33 @@ const GRASS_DOTS = Array.from({ length: 40 }, () => ({ x: seeded(), y: seeded(),
 const TREE_FLOWERS = Array.from({ length: 14 }, () => ({ a: seeded() * TAU, d: Math.sqrt(seeded()) * 0.85, r: 0.5 + seeded() * 0.5, rot: seeded() * TAU }));
 const CLOUDS = Array.from({ length: 4 }, (_, i) => ({ x: seeded(), y: 0.05 + seeded() * 0.18, s: 0.6 + seeded() * 0.6, v: 0.004 + seeded() * 0.006 }));
 
+// ---------- 그림 파일 (손으로 놀자 메뉴와 같은 그림체) ----------
+function loadImg(src) { const im = new Image(); im.decoding = "async"; im.src = src; return im; }
+const IMG = {
+  scene: loadImg("img/scene.jpg"),
+  tagHide: loadImg("img/tagger-hide.png"),
+  tagWatch: loadImg("img/tagger-watch.png"),
+  buddy: Object.fromEntries(["orange", "blue"].map(c => [c, {
+    run: loadImg(`img/buddy-${c}-run.png`), freeze: loadImg(`img/buddy-${c}-freeze.png`), caught: loadImg(`img/buddy-${c}-caught.png`),
+  }])),
+};
+const imgReady = im => im.complete && im.naturalWidth > 0;
+const SCENE_HORIZON = 0.455;   // scene.jpg 에서 풀밭이 시작하는 높이
+
+// 배경 그림을 화면에 꽉 채웠을 때의 위치 (지평선 높이를 그림에 맞추려고)
+function sceneRect() {
+  const im = IMG.scene, sw = im.naturalWidth || 1672, sh = im.naturalHeight || 941;
+  const k = Math.max(W / sw, H / sh), dw = sw * k, dh = sh * k;
+  return { x: (W - dw) / 2, y: (H - dh) / 2, w: dw, h: dh };
+}
+
 function layout() {
   const n = playerCount();
-  const horizon = H * 0.42;
-  const tag = { x: W / 2, y: H * 0.40, h: Math.min(H * 0.2, W * 0.16) };
+  const sr = sceneRect();
+  const horizon = Math.min(H * 0.6, Math.max(H * 0.3, sr.y + sr.h * SCENE_HORIZON));
+  const tag = { x: W / 2, y: horizon + H * 0.025, h: Math.min(H * 0.3, W * 0.22) };
   const lanes = [];
-  const y0 = H * 0.87, y1 = H * 0.44;
+  const y0 = H * 0.87, y1 = horizon + H * 0.04;
   if (n === 1) lanes.push({ xb: W * 0.5, xt: W * 0.5, wb: W * 0.12, wt: W * 0.035, y0, y1 });
   else {
     lanes.push({ xb: W * 0.25, xt: W * 0.43, wb: W * 0.1, wt: W * 0.03, y0, y1 });
@@ -843,6 +867,11 @@ function lanePoint(L, p) {
 }
 
 function drawBackground(t) {
+  if (imgReady(IMG.scene)) {
+    const r = sceneRect();
+    ctx.drawImage(IMG.scene, r.x, r.y, r.w, r.h);
+    return;
+  }
   const { horizon } = layout();
   let g = ctx.createLinearGradient(0, 0, 0, horizon);
   g.addColorStop(0, "#9fdcff"); g.addColorStop(1, "#e9f8ff");
@@ -885,6 +914,18 @@ function drawTree(x, baseY, size) {
 function drawTagger(x, feetY, h, face, t, watching) {
   const flip = Math.cos(face * Math.PI);           // 1 → -1 : 몸을 돌리는 느낌
   const front = face > 0.5;
+  const im = front ? IMG.tagWatch : IMG.tagHide;
+  if (imgReady(im)) {
+    // 노래할 때(뒷모습)는 살랑살랑 흔들리고, 볼 때는 통통 튀며 두리번
+    const sway = front ? Math.sin(t * 5) * 0.03 : Math.sin(t * 3.2) * 0.05;
+    const hop = front && watching ? Math.abs(Math.sin(t * 4)) * h * 0.02 : 0;
+    const w = h * im.naturalWidth / im.naturalHeight;
+    ctx.save(); ctx.translate(x, feetY - hop); ctx.rotate(sway); ctx.scale(Math.max(0.12, Math.abs(flip)), 1);
+    if (watching) { ctx.shadowColor = "rgba(255, 90, 160, 0.7)"; ctx.shadowBlur = h * 0.15; }
+    ctx.drawImage(im, -w / 2, -h, w, h);
+    ctx.restore();
+    return;
+  }
   ctx.save(); ctx.translate(x, feetY); ctx.scale(Math.max(0.12, Math.abs(flip)), 1);
   const hr = h * 0.2, headY = -h + hr;
   // 다리
@@ -934,6 +975,28 @@ function drawTagger(x, feetY, h, face, t, watching) {
 // 내 캐릭터: 동글동글 콩 친구
 function drawBuddy(x, feetY, h, c, opt) {
   const { run = 0, frozen = 0, hurt = false, label = "", moving = false } = opt;
+  const set = IMG.buddy[c.sprite];
+  const im = set && (hurt ? set.caught : frozen > 0.5 ? set.freeze : set.run);
+  if (im && imgReady(im)) {
+    ctx.save(); ctx.translate(x, feetY);
+    ctx.fillStyle = "rgba(0,0,0,0.15)"; ctx.beginPath(); ctx.ellipse(0, 0, h * 0.34, h * 0.07, 0, 0, TAU); ctx.fill();
+    const bob = moving ? Math.abs(Math.sin(run)) * h * 0.1 : 0;
+    const tilt = moving ? Math.sin(run) * 0.12 : hurt ? Math.sin(performance.now() / 40) * 0.15 : 0;
+    const squash = moving ? 1 + Math.cos(run * 2) * 0.04 : 1;
+    const ih = h * 1.05, iw = ih * im.naturalWidth / im.naturalHeight;
+    ctx.translate(0, -bob); ctx.rotate(tilt); ctx.scale(1 / squash, squash);
+    ctx.drawImage(im, -iw / 2, -ih, iw, ih);
+    ctx.restore();
+    if (label) {
+      ctx.save(); ctx.translate(x, feetY - bob);
+      ctx.font = `${Math.round(h * 0.2)}px Cafe24Ssurround, Jua, sans-serif`;
+      const tw = ctx.measureText(label).width + h * 0.2;
+      ctx.fillStyle = c.deep; rr(-tw / 2, -h * 1.32, tw, h * 0.26, h * 0.13); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(label, 0, -h * 1.185);
+      ctx.restore();
+    }
+    return;
+  }
   ctx.save(); ctx.translate(x, feetY);
   if (hurt) ctx.translate(Math.sin(performance.now() / 30) * h * 0.04, 0);
   const bob = moving ? -Math.abs(Math.sin(run)) * h * 0.06 : 0;
@@ -1101,7 +1164,7 @@ function frame(now) {
   const t = G.clock;
   drawBackground(t);
   const P = layout();
-  drawTree(P.tag.x, P.tag.y - P.tag.h * 0.05, P.tag.h * 1.1);
+  if (!imgReady(IMG.tagHide)) drawTree(P.tag.x, P.tag.y - P.tag.h * 0.05, P.tag.h * 1.1);
   const watching = G.phase === "red" && t >= G.graceUntil;
   const homeFace = G.screen === "home" ? (Math.sin(t * 0.9) > 0.6 ? 1 : 0) : G.tagFace;
   if (watching) { // 술래 눈빛

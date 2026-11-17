@@ -234,9 +234,9 @@
   .card-food    { --title: #ff5a4f; --shade: #b9302a; --edge: #ffc4ae; }
   .card-balloon { --title: #6a4de8; --shade: #3b27a8; --edge: #b3cdfd; }
   .card-flower  { --title: #e8457a; --shade: #a3134f; --edge: #ffc6dc; }
-  .cbg-flower { background: radial-gradient(circle at 50% 30%, #fff6fa 0 30%, transparent 31%), linear-gradient(#cdeeff 0 55%, #b5e39a 55% 100%); }
-  .card-flower .card-title { white-space: pre-line; font-size: clamp(20px, 2.1vw, 36px); line-height: 1.1; bottom: 22%; }
-  .card-flower .tag2 { background: #e8457a; box-shadow: 0 4px 0 #a3134f, 0 8px 14px rgba(0, 0, 0, 0.25); }
+  .card-flower .card-title { white-space: pre-line; font-size: clamp(18px, 1.85vw, 32px); line-height: 1.08; bottom: 24.5%; }
+  .card-flower .cart { top: 6%; height: 46%; }
+  .card-flower .tag2 { right: auto; left: 5%; transform: rotate(-6deg); background: #e8457a; box-shadow: 0 4px 0 #a3134f, 0 8px 14px rgba(0, 0, 0, 0.25); }
   .menu-foot { position: relative; width: min(1400px, 92vw, 158vh); display: flex; align-items: center; justify-content: center; min-height: 56px; }
   .cam-pill {
     position: absolute; left: 0; display: flex; align-items: center; gap: 10px; padding: 6px 20px 6px 12px; border-radius: 999px;
@@ -389,12 +389,12 @@
         <span class="play-pill"><img class="btnbg" data-ui="btn-blue" alt=""><span class="pl"><img data-ui="tri" alt="">시작하기</span></span>
       </button>
       <button class="world card-flower" data-game="flower" data-href="mugunghwa/">
-        <div class="cbg cbg-flower"></div>
-        <img class="cart" src="mugunghwa/card-art.svg" alt="">
+        <img class="cbg" src="card-backgrounds/flower-garden.png" alt="">
+        <img class="cart" src="art/mugunghwa-game.png" alt="">
         <div class="card-title otitle" data-t="무궁화 꽃이&#10;피었습니다">무궁화 꽃이
 피었습니다</div>
         <span class="tag2">1~2인</span>
-        <span class="play-pill"><img class="btnbg" data-ui="btn-coral" alt=""><span class="pl"><img data-ui="tri" alt="">시작하기</span></span>
+        <span class="play-pill"><img class="btnbg" src="buttons/play-pink.png" alt=""><span class="pl"><img data-ui="tri" alt="">시작하기</span></span>
       </button>
     </div>
     <div class="menu-foot">
