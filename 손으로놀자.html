@@ -150,7 +150,7 @@
     color: #4a3b2a; font: inherit; font-size: clamp(18px, 1.8vw, 24px); text-align: left; cursor: pointer;
   }
   .sound-panel button.off { border-color: #e0d6c8; background: #f4efe8; color: #9a8b78; }
-  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8vw; width: min(1400px, 92vw, 158vh); }
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.6vw; width: min(1400px, 92vw, 158vh); }
   button.world {
     position: relative; padding: 0; aspect-ratio: 1 / 0.84; border-radius: 34px; overflow: hidden;
     border: 6px solid #fff; background: none; color: inherit;
@@ -163,7 +163,7 @@
   .cart { position: absolute; left: 5%; top: 3%; width: 90%; height: 58%; object-fit: contain; }
   .card-title {
     position: absolute; left: 0; right: 0; bottom: 23%; text-align: center;
-    font-size: clamp(34px, 3.8vw, 60px);
+    font-size: clamp(28px, 3vw, 52px);
   }
   /* 또렷한 제목 글씨: 색 글자 + 흰 테두리 + 바깥 진한 테두리 (두 겹) */
   .otitle {
@@ -233,6 +233,10 @@
   .card-bug     { --title: #3cb54a; --shade: #1c7a33; --edge: #a5e8bf; }
   .card-food    { --title: #ff5a4f; --shade: #b9302a; --edge: #ffc4ae; }
   .card-balloon { --title: #6a4de8; --shade: #3b27a8; --edge: #b3cdfd; }
+  .card-flower  { --title: #e8457a; --shade: #a3134f; --edge: #ffc6dc; }
+  .cbg-flower { background: radial-gradient(circle at 50% 30%, #fff6fa 0 30%, transparent 31%), linear-gradient(#cdeeff 0 55%, #b5e39a 55% 100%); }
+  .card-flower .card-title { white-space: pre-line; font-size: clamp(20px, 2.1vw, 36px); line-height: 1.1; bottom: 22%; }
+  .card-flower .tag2 { background: #e8457a; box-shadow: 0 4px 0 #a3134f, 0 8px 14px rgba(0, 0, 0, 0.25); }
   .menu-foot { position: relative; width: min(1400px, 92vw, 158vh); display: flex; align-items: center; justify-content: center; min-height: 56px; }
   .cam-pill {
     position: absolute; left: 0; display: flex; align-items: center; gap: 10px; padding: 6px 20px 6px 12px; border-radius: 999px;
@@ -384,10 +388,18 @@
         <span class="tag2">2인 대결</span>
         <span class="play-pill"><img class="btnbg" data-ui="btn-blue" alt=""><span class="pl"><img data-ui="tri" alt="">시작하기</span></span>
       </button>
+      <button class="world card-flower" data-game="flower" data-href="mugunghwa/">
+        <div class="cbg cbg-flower"></div>
+        <img class="cart" src="mugunghwa/card-art.svg" alt="">
+        <div class="card-title otitle" data-t="무궁화 꽃이&#10;피었습니다">무궁화 꽃이
+피었습니다</div>
+        <span class="tag2">1~2인</span>
+        <span class="play-pill"><img class="btnbg" data-ui="btn-coral" alt=""><span class="pl"><img data-ui="tri" alt="">시작하기</span></span>
+      </button>
     </div>
     <div class="menu-foot">
       <div class="cam-pill" id="camPill"><img data-ui="camera" alt=""><i></i><span id="camText">카메라 준비 완료</span></div>
-      <div class="menu-hint">👆 카드를 누르거나 숫자 1·2·3 키로 골라요!</div>
+      <div class="menu-hint">👆 카드를 누르거나 숫자 1·2·3·4 키로 골라요!</div>
     </div>
     <div class="msg" id="menuMsg"></div>
   </div>
@@ -1124,7 +1136,7 @@ addEventListener("keydown", e => {
   if (visible("title")) { if (ready) { unlockAudio(); goHome(); } }
   // 게임 선택: 숫자 1·2·3으로 고르기, Esc로 처음으로
   else if (visible("menu")) {
-    const pick = ["bug", "mouth", "balloon"]["123".indexOf(e.key)];
+    const pick = ["bug", "mouth", "balloon", "flower"]["1234".indexOf(e.key)];
     if (pick && e.key !== "") document.querySelector(`[data-game="${pick}"]`).click();
     else if (e.key === "Escape") goTitle();
   }
@@ -1145,6 +1157,8 @@ document.querySelectorAll("button.world").forEach(btn => {
   btn.onclick = () => {
     unlockAudio();
     sfx.tick();
+    // 다른 페이지로 된 게임 (무궁화 꽃이 피었습니다)
+    if (btn.dataset.href) { location.href = btn.dataset.href; return; }
     if (btn.dataset.game === "mouth") {
       mode = "face";
       loadFace();
