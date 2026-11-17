@@ -1,0 +1,165 @@
+<meta charset="utf-8">
+<title>말랑 트리케라 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* 레이아웃: 화면 전체가 촬영대, 왼쪽 위에 기준 그림 액자, 아래에 원단 색상 스와치 */
+:root {
+  --bg: #e7e9e3;
+  --ink: #2c3127;
+  --muted: #646b5c;
+  --card: rgba(251, 251, 247, .9);
+  --line: #d6dacd;
+  --accent: #6f9a35;
+  --stage-a: #f1f2ed;
+  --stage-b: #c3c6be;
+  --font-display: "Jua", "Gowun Dodum", system-ui, sans-serif;
+  --font-body: "Gowun Dodum", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1c1e1a; --ink: #ecefe4; --muted: #a6ad9b; --card: rgba(36, 39, 32, .9); --line: #3a3e34;
+    --accent: #a5cf6a; --stage-a: #5a5e56; --stage-b: #262824; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1c1e1a; --ink: #ecefe4; --muted: #a6ad9b; --card: rgba(36, 39, 32, .9); --line: #3a3e34;
+  --accent: #a5cf6a; --stage-a: #5a5e56; --stage-b: #262824; color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); overflow: hidden; }
+.stage { position: relative; height: 100%; background: radial-gradient(110% 85% at 50% 30%, var(--stage-a), var(--stage-b)); }
+canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+canvas:active { cursor: grabbing; }
+.card { position: absolute; background: var(--card); border: 1px solid var(--line); border-radius: 14px; backdrop-filter: blur(6px); }
+.head { top: 16px; left: max(16px, env(safe-area-inset-left, 0px)); padding: 14px 16px; display: flex; gap: 14px; align-items: center; max-width: calc(100% - 32px); }
+.head img { width: 84px; height: 84px; border-radius: 10px; object-fit: cover; flex: none; }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: 26px; margin: 0; line-height: 1.1; }
+.head p { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.45; }
+.dock { left: 50%; transform: translateX(-50%); bottom: 16px; padding: 10px 12px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: center; width: max-content; max-width: calc(100% - 32px); }
+.sw { display: flex; align-items: center; gap: 7px; font-size: 13px; }
+.sw i { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line); }
+.sw code { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.btns { display: flex; gap: 6px; }
+button { font: inherit; font-size: 13px; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: 15px; color: var(--muted); pointer-events: none; }
+@media (max-width: 600px) {
+  .head img { width: 60px; height: 60px; }
+  h1 { font-size: 21px; }
+  .dock { bottom: 12px; }
+  .sw code { display: none; }
+}
+</style>
+
+<div class="stage" id="stage">
+  <div class="loading" id="loading">3D 모델 불러오는 중…</div>
+  <div class="card head">
+    <img src="reference.jpg" alt="말랑 트리케라 기준 이미지">
+    <div>
+      <h1>말랑 트리케라</h1>
+      <p>인형뽑기 경품용 봉제인형 3D 모델<br>드래그로 회전 · 휠/핀치로 확대</p>
+    </div>
+  </div>
+  <div class="card dock">
+    <span class="sw"><i style="background:#a6cd68"></i>몸 <code>#a6cd68</code></span>
+    <span class="sw"><i style="background:#f4e8c1"></i>배·뿔 <code>#f4e8c1</code></span>
+    <span class="sw"><i style="background:#83ad48"></i>무늬 <code>#83ad48</code></span>
+    <span class="sw"><i style="background:#f29a98"></i>볼터치 <code>#f29a98</code></span>
+    <span class="btns">
+      <button type="button" id="b-rot" aria-pressed="true">자동 회전</button>
+      <button type="button" id="b-front">정면</button>
+    </span>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+const camera = new THREE.PerspectiveCamera(30, 1, 0.01, 100);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.enablePan = false;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 1.4;
+controls.maxPolarAngle = Math.PI * 0.55;
+
+const sun = new THREE.DirectionalLight(0xffffff, 1.3);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.radius = 8;
+scene.add(sun);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.ShadowMaterial({ opacity: 0.18 }));
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+let radius = 1, center = new THREE.Vector3();
+function frontView() {
+  camera.position.copy(center).add(new THREE.Vector3(0.55, 0.35, 1).normalize().multiplyScalar(radius * 3.4 / Math.min(1, camera.aspect) ** 0.7));
+  controls.target.copy(center);
+}
+
+const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+loader.load('malang-trike.json', (gltf) => {
+  const model = gltf.scene;
+  model.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  const box = new THREE.Box3().setFromObject(model);
+  const c = box.getCenter(new THREE.Vector3());
+  model.position.set(-c.x, -box.min.y, -c.z);
+  scene.add(model);
+  const size = box.getSize(new THREE.Vector3());
+  radius = size.length() / 2;
+  center.set(0, size.y * 0.48, 0);
+  sun.position.set(radius * 2, radius * 5, radius * 3);
+  Object.assign(sun.shadow.camera, { left: -radius * 2, right: radius * 2, top: radius * 2, bottom: -radius * 2, near: 0.01, far: radius * 12 });
+  sun.shadow.camera.updateProjectionMatrix();
+  controls.minDistance = radius * 1.4;
+  controls.maxDistance = radius * 8;
+  frontView();
+  document.getElementById('loading').remove();
+}, undefined, (err) => {
+  document.getElementById('loading').textContent = '3D 모델을 불러오지 못했습니다. 페이지를 새로고침해 주세요.';
+  console.error(err);
+});
+
+const bRot = document.getElementById('b-rot');
+bRot.addEventListener('click', () => {
+  controls.autoRotate = !controls.autoRotate;
+  bRot.setAttribute('aria-pressed', String(controls.autoRotate));
+});
+document.getElementById('b-front').addEventListener('click', frontView);
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) bRot.click();
+
+function resize() {
+  renderer.setSize(stage.clientWidth, stage.clientHeight, false);
+  camera.aspect = stage.clientWidth / stage.clientHeight;
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage);
+resize();
+renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+</script>

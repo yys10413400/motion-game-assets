@@ -1,0 +1,286 @@
+{
+  "title": "손으로 놀자! 모션게임",
+  "version": 1,
+  "assets": [
+    {
+      "file": "backgrounds/menu-room.png",
+      "width": 1672,
+      "height": 941,
+      "transparent": false,
+      "transparentPixelRatio": 0,
+      "visibleBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 1641495
+    },
+    {
+      "file": "backgrounds/loading-clouds.png",
+      "width": 1672,
+      "height": 941,
+      "transparent": false,
+      "transparentPixelRatio": 0,
+      "visibleBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1672,
+        "height": 941
+      },
+      "bytes": 1316745
+    },
+    {
+      "file": "branding/game-logo.png",
+      "width": 2172,
+      "height": 724,
+      "transparent": true,
+      "transparentPixelRatio": 0.5968,
+      "visibleBounds": {
+        "x": 252,
+        "y": 109,
+        "width": 1774,
+        "height": 538
+      },
+      "bytes": 968327
+    },
+    {
+      "file": "art/bug-game.png",
+      "width": 1536,
+      "height": 1024,
+      "transparent": true,
+      "transparentPixelRatio": 0.5916,
+      "visibleBounds": {
+        "x": 63,
+        "y": 58,
+        "width": 1412,
+        "height": 917
+      },
+      "bytes": 1742651
+    },
+    {
+      "file": "art/food-game.png",
+      "width": 1536,
+      "height": 1024,
+      "transparent": true,
+      "transparentPixelRatio": 0.4875,
+      "visibleBounds": {
+        "x": 137,
+        "y": 75,
+        "width": 1347,
+        "height": 910
+      },
+      "bytes": 2032542
+    },
+    {
+      "file": "art/balloon-game.png",
+      "width": 1672,
+      "height": 941,
+      "transparent": true,
+      "transparentPixelRatio": 0.5671,
+      "visibleBounds": {
+        "x": 169,
+        "y": 84,
+        "width": 1332,
+        "height": 785
+      },
+      "bytes": 976570
+    },
+    {
+      "file": "art/hand-mascot.png",
+      "width": 1370,
+      "height": 1148,
+      "transparent": true,
+      "transparentPixelRatio": 0.5419,
+      "visibleBounds": {
+        "x": 52,
+        "y": 130,
+        "width": 1276,
+        "height": 933
+      },
+      "bytes": 976400
+    },
+    {
+      "file": "buttons/play-mint.png",
+      "width": 2172,
+      "height": 724,
+      "transparent": true,
+      "transparentPixelRatio": 0.4861,
+      "visibleBounds": {
+        "x": 93,
+        "y": 149,
+        "width": 1987,
+        "height": 419
+      },
+      "bytes": 914517
+    },
+    {
+      "file": "buttons/play-coral.png",
+      "width": 2172,
+      "height": 724,
+      "transparent": true,
+      "transparentPixelRatio": 0.5076,
+      "visibleBounds": {
+        "x": 124,
+        "y": 153,
+        "width": 1924,
+        "height": 416
+      },
+      "bytes": 905729
+    },
+    {
+      "file": "buttons/play-blue.png",
+      "width": 2172,
+      "height": 724,
+      "transparent": true,
+      "transparentPixelRatio": 0.4822,
+      "visibleBounds": {
+        "x": 78,
+        "y": 145,
+        "width": 2016,
+        "height": 419
+      },
+      "bytes": 975268
+    },
+    {
+      "file": "icons/settings.png",
+      "width": 1278,
+      "height": 1230,
+      "transparent": true,
+      "transparentPixelRatio": 0.5319,
+      "visibleBounds": {
+        "x": 157,
+        "y": 124,
+        "width": 960,
+        "height": 968
+      },
+      "bytes": 1035720
+    },
+    {
+      "file": "icons/hand-home.png",
+      "width": 1265,
+      "height": 1243,
+      "transparent": true,
+      "transparentPixelRatio": 0.3979,
+      "visibleBounds": {
+        "x": 84,
+        "y": 78,
+        "width": 1094,
+        "height": 1091
+      },
+      "bytes": 1272350
+    },
+    {
+      "file": "icons/play-triangle.png",
+      "width": 1536,
+      "height": 1024,
+      "transparent": true,
+      "transparentPixelRatio": 0.8508,
+      "visibleBounds": {
+        "x": 504,
+        "y": 226,
+        "width": 567,
+        "height": 589
+      },
+      "bytes": 869598
+    },
+    {
+      "file": "icons/camera.png",
+      "width": 1536,
+      "height": 1024,
+      "transparent": true,
+      "transparentPixelRatio": 0.7399,
+      "visibleBounds": {
+        "x": 377,
+        "y": 219,
+        "width": 783,
+        "height": 590
+      },
+      "bytes": 1056792
+    },
+    {
+      "file": "loading/track.png",
+      "width": 2172,
+      "height": 724,
+      "transparent": true,
+      "transparentPixelRatio": 0.7377,
+      "visibleBounds": {
+        "x": 46,
+        "y": 263,
+        "width": 2080,
+        "height": 196
+      },
+      "bytes": 434040
+    },
+    {
+      "file": "loading/fill.png",
+      "width": 2172,
+      "height": 724,
+      "transparent": true,
+      "transparentPixelRatio": 0.7754,
+      "visibleBounds": {
+        "x": 40,
+        "y": 279,
+        "width": 2094,
+        "height": 166
+      },
+      "bytes": 434036
+    },
+    {
+      "file": "icons/star.png",
+      "width": 1312,
+      "height": 1199,
+      "transparent": true,
+      "transparentPixelRatio": 0.617,
+      "visibleBounds": {
+        "x": 142,
+        "y": 149,
+        "width": 1019,
+        "height": 932
+      },
+      "bytes": 764801
+    },
+    {
+      "file": "card-backgrounds/bugs-garden.png",
+      "width": 1448,
+      "height": 1086,
+      "transparent": false,
+      "transparentPixelRatio": 0,
+      "visibleBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1448,
+        "height": 1086
+      },
+      "bytes": 1719941
+    },
+    {
+      "file": "card-backgrounds/food-peach.png",
+      "width": 1448,
+      "height": 1086,
+      "transparent": false,
+      "transparentPixelRatio": 0,
+      "visibleBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1448,
+        "height": 1086
+      },
+      "bytes": 1415370
+    },
+    {
+      "file": "card-backgrounds/balloons-sky.png",
+      "width": 1448,
+      "height": 1086,
+      "transparent": false,
+      "transparentPixelRatio": 0,
+      "visibleBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1448,
+        "height": 1086
+      },
+      "bytes": 1405995
+    }
+  ]
+}

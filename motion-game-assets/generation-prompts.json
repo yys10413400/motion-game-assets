@@ -1,0 +1,106 @@
+{
+  "mode": "built-in image_gen",
+  "reference": "reference/original-design.png",
+  "assets": [
+    {
+      "file": "backgrounds/menu-room.png",
+      "transparent": false,
+      "prompt": "Recreate ONLY the warm toy playroom background behind the TOP main menu in the reference. Wide landscape 16:9 scene, softly lit cream playroom, large sunlit window left, toy shelf upper right, plants at sides, pastel poufs, pale wooden floor and little pastel rugs. Center 75 percent intentionally quiet and empty for interface. REMOVE all title lettering, cards, bugs, foods, balloons, hand mascots, buttons, settings, labels and icons. No text or UI. Fill entire image with opaque background."
+    },
+    {
+      "file": "backgrounds/loading-clouds.png",
+      "transparent": false,
+      "prompt": "Recreate ONLY the background of the BOTTOM loading screen in the reference. Wide landscape 16:9 warm ivory central open space, sculpted pastel mint, blue, cream and butter-yellow cloudlike rounded hills at the bottom left and bottom right edges, a couple soft clouds near top corners. Keep center 75 percent EMPTY. REMOVE all title, balloons, foods, caterpillar, stars, hand, loading bar, lettering and all interface. No text or icons. Opaque background fills image."
+    },
+    {
+      "file": "branding/game-logo.png",
+      "transparent": true,
+      "prompt": "Extract and recreate ONLY the main title logo from reference as one isolated transparent PNG. EXACT Korean text '손으로 놀자!' in one line, '손으로' glossy puffy mint turquoise and '놀자!' glossy puffy coral red, underneath a small cream pill containing EXACT '모션게임'. Same sculpted 3D friendly typography as reference. NO hand, no stars or decorative elements, no panels behind title, no scene, no other letters. Entire logo generous transparent padding."
+    },
+    {
+      "file": "art/bug-game.png",
+      "transparent": true,
+      "prompt": "Extract and recreate ONLY an isolated group of the three characters/props in the bug game card: adorable plump lime green caterpillar with large sparkling eyes, lavender blue cute fly hovering above, and mint green rounded lattice fly swatter with peach handle tilted beside them. Premium 3D clay toy rendering exactly matching reference. NO card frame, leaves, grass, flowers, scenery, text, button, title, background or ground. Transparent background outside this single art group."
+    },
+    {
+      "file": "art/food-game.png",
+      "transparent": true,
+      "prompt": "Extract and recreate ONLY an isolated floating group of four foods from the middle food card: glossy red strawberry upper left, pink ring donut upper right, little cheeseburger lower left and triangular pepperoni pizza slice lower right. Match the premium rounded 3D toy food look of reference. NO card, labels, text, start button, stars, hearts, background, plate or ground. Transparent outside the four-object art group."
+    },
+    {
+      "file": "art/balloon-game.png",
+      "transparent": true,
+      "prompt": "Extract and recreate ONLY the balloon duel illustration from the reference top right game card: friendly competitive blue balloon on left and coral red balloon on right with playful determined faces, small golden impact star between them, short matching tied ribbons. Equal sizes and visual weight, polished glossy 3D toys. NO card frame, title, badge, button, scenery, glow or backdrop. Transparent outside one isolated illustration group."
+    },
+    {
+      "file": "art/hand-mascot.png",
+      "transparent": true,
+      "prompt": "Extract and recreate ONLY the smiling waving hand mascot from center of bottom loading screen. Five rounded peach fingers, soft plump 3D toy hand, happy small dark eyes, tiny smiling mouth, rosy cheeks. Add two small butter-yellow curved wave strokes to left as part of mascot. NO other characters, text, logo, panels, scene or glow. Whole hand isolated on actual transparent background."
+    },
+    {
+      "file": "buttons/play-mint.png",
+      "transparent": true,
+      "prompt": "Create ONLY ONE empty wide horizontal mint turquoise rounded pill button matching the mint start button in reference. Plump dimensional glossy 3D plastic, brighter top left highlight, darker teal softly rounded lower edge. Front view, 4:1 button shape centered with transparent padding. NO text, icon, triangle, label, decorative objects or other buttons. Genuine transparent background outside the button."
+    },
+    {
+      "file": "buttons/play-coral.png",
+      "transparent": true,
+      "prompt": "Create ONLY ONE empty wide horizontal peach-coral red rounded pill button matching the red start button in reference. Plump dimensional glossy 3D plastic, brighter top left highlight, darker coral softly rounded lower edge. Front view, 4:1 button shape centered with transparent padding. NO text, icon, triangle, label, decorative objects or other buttons. Genuine transparent background outside button."
+    },
+    {
+      "file": "buttons/play-blue.png",
+      "transparent": true,
+      "prompt": "Create ONLY ONE empty wide horizontal bright sky-blue rounded pill button matching the blue start button in reference. Plump dimensional glossy 3D plastic, brighter top left highlight, darker blue softly rounded lower edge. Front view, 4:1 button shape centered with transparent padding. NO text, icon, triangle, label, decorative objects or other buttons. Genuine transparent background outside button."
+    },
+    {
+      "file": "icons/settings.png",
+      "transparent": true,
+      "prompt": "Extract and recreate ONLY the small settings control from top right reference: round glossy mint button with a centered chunky cream-white gear pictogram. Premium rounded 3D toy icon, straight front view, centered with generous transparent padding, no letters, scene or other icons. Actual transparent background outside round control."
+    },
+    {
+      "file": "icons/hand-home.png",
+      "transparent": true,
+      "prompt": "Extract and recreate ONLY the small hand control from top left reference: round glossy butter-yellow and peach button with a centered peach waving five-finger hand pictogram, cream rim, premium rounded 3D toy icon. Straight front view, isolated, no face, no text, no scene or other icons. Actual transparent background outside round control."
+    },
+    {
+      "file": "icons/play-triangle.png",
+      "transparent": true,
+      "prompt": "Create ONLY a single small white cream right-pointing rounded equilateral play triangle pictogram matching those inside start buttons of reference. Softly sculpted 3D toy white plastic with subtle self shading. Straight front view, centered, no circle or button behind it, no text or decoration. Actual transparent background."
+    },
+    {
+      "file": "icons/camera.png",
+      "transparent": true,
+      "prompt": "Create ONLY a single dark teal and cream 3D camera pictogram matching the camera-ready badge at lower left of reference. Rounded rectangular camera body with little raised top tab, clear circular cream rim lens with dark teal inner lens. Straight front view, small simple readable silhouette. NO badge background, text, indicator, button, scene or other objects. Actual transparent background."
+    },
+    {
+      "file": "loading/track.png",
+      "transparent": true,
+      "prompt": "Extract and recreate ONLY the EMPTY loading progress bar track from bottom screen reference. A wide horizontal 12:1 rounded capsule with thick cream-white sculpted rim, subtle peach outside edge and pale warm ivory recessed interior. Completely EMPTY no colored fill inside. Front view, centered, isolated on actual transparent background. NO star, percentage, text, characters or other interface."
+    },
+    {
+      "file": "loading/fill.png",
+      "transparent": true,
+      "prompt": "Create ONLY a full solid mint turquoise loading-bar fill strip matching bottom reference. Wide horizontal 12:1 rounded capsule strip, glossy raised smooth 3D mint material with top-left white glint, subtle dark teal lower shading. No surrounding track or rim. Isolated transparent background outside strip. NO stars, percentage, text, scene or other objects."
+    },
+    {
+      "file": "icons/star.png",
+      "transparent": true,
+      "prompt": "Create ONLY ONE plump butter-yellow five-point star matching the star at the leading edge of loading bar in reference. Rounded tips, premium 3D clay toy, soft glossy highlight, front view, centered isolated. Actual transparent background. No glow, motion lines, text, scene or other stars."
+    },
+    {
+      "file": "card-backgrounds/bugs-garden.png",
+      "transparent": false,
+      "prompt": "Recreate ONLY the scenery INSIDE the mint bug selection card in the reference: a softly lit miniature 3D toy garden with big rounded fresh green leaves framing left and right edges, tiny white daisies and low lime grassy mounds along bottom, pale mint softly blurred center. Wide horizontal 4:3 illustration, image fully filled with this garden scenery. Center 65 percent quiet for overlaid characters. NO caterpillar, fly, swatter, insects, title, letters, badge, button, frame or UI. The whole rectangular image is opaque. This is a backdrop layer to place behind separately supplied character art."
+    },
+    {
+      "file": "card-backgrounds/food-peach.png",
+      "transparent": false,
+      "prompt": "Recreate ONLY the scenery INSIDE the peach food selection card in the reference: warm peach and apricot soft gradient with a couple tiny sculpted butter-yellow stars and subtle pink hearts at FAR OUTSIDE edges, soft rounded cream peach cloud/swoosh along bottom edge. Wide horizontal 4:3 image, center 70 percent clean empty peach negative space. NO food, strawberry, donut, hamburger, pizza, characters, letters, title, badge, button, frame or UI. Entire rectangular image opaque. Backdrop layer to place behind separately supplied food art."
+    },
+    {
+      "file": "card-backgrounds/balloons-sky.png",
+      "transparent": false,
+      "prompt": "Recreate ONLY the scenery INSIDE the sky-blue balloon selection card in the reference: soft blue to pale lavender gradient with a few puffy soft cream cloud shapes low at the edges, a couple tiny gold stars at upper far corners and subtle white curved swooshes near outer edges. Wide horizontal 4:3 image, center 70 percent clean empty blue negative space. NO balloons, faces, strings, characters, central impact star, lettering, title, badge, button, card frame or UI. Entire rectangular image opaque. Backdrop layer to place behind separately supplied balloon art."
+    }
+  ]
+}

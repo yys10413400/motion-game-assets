@@ -1,0 +1,477 @@
+<title>말랑 트리케라 인형</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* 레이아웃: 왼쪽은 스튜디오 촬영대(3D), 오른쪽은 봉제 사양서 패널. 좁으면 위아래로 쌓음 */
+:root {
+  --bg: #eef0ea;
+  --panel: #fbfbf7;
+  --ink: #2c3127;
+  --muted: #6b7262;
+  --line: #dde1d4;
+  --accent: #6f9a35;
+  --stage-top: #b9bcb5;
+  --stage-bottom: #e9eae5;
+  --chip: #eef2e4;
+  --font-display: "Jua", "Gowun Dodum", system-ui, sans-serif;
+  --font-body: "Gowun Dodum", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1d19; --panel: #23261f; --ink: #ecefe4; --muted: #a3aa98; --line: #363a31;
+    --accent: #a5cf6a; --stage-top: #3a3d38; --stage-bottom: #5b5e57; --chip: #2d3227;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1d19; --panel: #23261f; --ink: #ecefe4; --muted: #a3aa98; --line: #363a31;
+  --accent: #a5cf6a; --stage-top: #3a3d38; --stage-bottom: #5b5e57; --chip: #2d3227;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 360px; height: 100%; }
+.stage { position: relative; background: radial-gradient(120% 90% at 50% 20%, var(--stage-bottom), var(--stage-top)); min-height: 0; overflow: hidden; }
+.stage canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.stage canvas:active { cursor: grabbing; }
+.hint { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); bottom: 14px; font-size: 13px; color: var(--ink); opacity: .7; pointer-events: none; }
+.size-badge { position: absolute; right: 16px; top: 14px; font-family: var(--font-mono); font-size: 13px; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-variant-numeric: tabular-nums; }
+.panel { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; padding-block: 22px 28px; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 22px; }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: 30px; margin: 0; line-height: 1.1; text-wrap: balance; }
+.sub { color: var(--muted); margin: 6px 0 0; line-height: 1.5; font-size: 14px; }
+.sec { display: flex; flex-direction: column; gap: 10px; }
+.sec h2 { margin: 0; font-size: 12px; letter-spacing: .08em; color: var(--muted); font-weight: 400; }
+.ways { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.way { border: 1px solid var(--line); background: var(--chip); border-radius: 12px; padding: 8px 4px 6px; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; font: inherit; font-size: 12px; color: var(--ink); }
+.way i { width: 26px; height: 26px; border-radius: 50%; display: block; box-shadow: inset 0 -4px 0 rgba(0,0,0,.08); }
+.way[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
+.way:focus-visible, .tog input:focus-visible, input[type=range]:focus-visible, input[type=color]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.colors { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.colors label { display: flex; align-items: center; gap: 8px; font-size: 14px; background: var(--chip); border-radius: 10px; padding: 6px 8px; }
+.colors input { width: 30px; height: 30px; border: none; padding: 0; background: none; cursor: pointer; flex: none; }
+.tog { display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding: 4px 0; }
+.tog input { width: 18px; height: 18px; accent-color: var(--accent); }
+.range-row { display: flex; align-items: center; gap: 12px; }
+.range-row input { flex: 1; accent-color: var(--accent); }
+.range-row output { font-family: var(--font-mono); font-variant-numeric: tabular-nums; min-width: 56px; text-align: right; }
+.spec { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; font-size: 14px; }
+.spec dt { color: var(--muted); }
+.spec dd { margin: 0; }
+.spec .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.notes { margin: 0; padding-left: 18px; line-height: 1.6; font-size: 14px; color: var(--ink); }
+.notes li::marker { color: var(--accent); }
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: 58vh auto; height: auto; }
+  .panel { border-left: none; border-top: 1px solid var(--line); overflow: visible; }
+  .size-badge { right: max(16px, env(safe-area-inset-right, 0px)); }
+}
+</style>
+
+<div class="app">
+  <div class="stage" id="stage">
+    <div class="size-badge" id="badge">높이 20 cm</div>
+    <div class="hint">드래그해서 돌려보기 · 인형을 누르면 말랑</div>
+  </div>
+  <aside class="panel">
+    <div>
+      <h1>말랑 트리케라</h1>
+      <p class="sub">인형뽑기용 봉제인형 시안. 큰 머리, 짧은 다리, 둥근 프릴로 집게에 잘 걸리는 2등신 체형입니다.</p>
+    </div>
+
+    <section class="sec">
+      <h2>컬러웨이</h2>
+      <div class="ways" id="ways"></div>
+    </section>
+
+    <section class="sec">
+      <h2>부위별 색</h2>
+      <div class="colors">
+        <label><input type="color" id="c-body"> 몸</label>
+        <label><input type="color" id="c-cream"> 배 · 뿔</label>
+        <label><input type="color" id="c-spot"> 등 무늬</label>
+        <label><input type="color" id="c-blush"> 볼터치</label>
+      </div>
+    </section>
+
+    <section class="sec">
+      <h2>디테일</h2>
+      <label class="tog">볼터치 <input type="checkbox" id="t-blush" checked></label>
+      <label class="tog">등 · 프릴 무늬 <input type="checkbox" id="t-spots" checked></label>
+      <label class="tog">볼체인 고리 (키링형) <input type="checkbox" id="t-chain"></label>
+      <label class="tog">옆구리 세탁 라벨 <input type="checkbox" id="t-tag" checked></label>
+      <label class="tog">자동 회전 <input type="checkbox" id="t-rot"></label>
+    </section>
+
+    <section class="sec">
+      <h2>완성 크기</h2>
+      <div class="range-row">
+        <input type="range" id="size" min="10" max="35" step="1" value="20" aria-label="완성 높이">
+        <output id="size-out">20 cm</output>
+      </div>
+      <dl class="spec">
+        <dt>높이</dt><dd class="num" id="d-h">–</dd>
+        <dt>길이</dt><dd class="num" id="d-l">–</dd>
+        <dt>폭</dt><dd class="num" id="d-w">–</dd>
+        <dt>분류</dt><dd id="d-cls">–</dd>
+      </dl>
+    </section>
+
+    <section class="sec">
+      <h2>봉제 메모</h2>
+      <ul class="notes">
+        <li>몸판: 단모 민키(벨보아) 원단, 프릴은 2겹 + 얇은 심지로 형태 유지</li>
+        <li>눈 · 입: 자수 처리 (플라스틱 눈 대신, 유아 안전 기준)</li>
+        <li>뿔 · 발가락: 크림색 민키에 솜을 단단히 채움</li>
+        <li>머리가 무거운 체형이라 엉덩이 쪽에 펠렛 소량 → 앉은 자세 안정</li>
+      </ul>
+    </section>
+  </aside>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const WAYS = [
+  { name: '새싹',   body: '#a6cd68', cream: '#f4e8c1', spot: '#83ad48', blush: '#f29a98' },
+  { name: '딸기우유', body: '#f3b5c1', cream: '#fff0d6', spot: '#e38fa2', blush: '#ec7488' },
+  { name: '소다',   body: '#9dd1e6', cream: '#fff3da', spot: '#74b2cd', blush: '#f4a0a8' },
+  { name: '망고',   body: '#f6cd68', cream: '#fff4dc', spot: '#e0a93c', blush: '#ef8878' },
+  { name: '라벤더', body: '#c5b3e5', cream: '#fbf0db', spot: '#a590d1', blush: '#f09cb0' },
+];
+
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+camera.position.set(5.2, 2.9, 6.4);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 1.45, 0);
+controls.enableDamping = true;
+controls.minDistance = 4; controls.maxDistance = 14;
+controls.maxPolarAngle = Math.PI * 0.53;
+controls.enablePan = false;
+controls.autoRotateSpeed = 1.6;
+
+const key = new THREE.DirectionalLight(0xffffff, 1.6);
+key.position.set(3, 7, 4);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+key.shadow.radius = 6;
+Object.assign(key.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4, near: 1, far: 20 });
+key.shadow.bias = -0.0005;
+scene.add(key);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f84, 0.5));
+
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.2 }));
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// 민키 원단 결: 캔버스 노이즈를 범프맵으로
+function fabricTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const g = c.getContext('2d');
+  const img = g.createImageData(256, 256);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const v = 128 + (Math.random() - 0.5) * 90;
+    img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255;
+  }
+  g.putImageData(img, 0, 0);
+  g.globalAlpha = 0.25;
+  for (let i = 0; i < 1400; i++) {
+    g.strokeStyle = Math.random() < 0.5 ? '#fff' : '#000';
+    const x = Math.random() * 256, y = Math.random() * 256, a = Math.random() * Math.PI;
+    g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * 4, y + Math.sin(a) * 4); g.stroke();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(6, 6);
+  return t;
+}
+const fabric = fabricTexture();
+const plush = (hex) => new THREE.MeshPhysicalMaterial({
+  color: hex, roughness: 0.92, sheen: 1, sheenRoughness: 0.55, sheenColor: new THREE.Color('#ffffff'),
+  bumpMap: fabric, bumpScale: 0.6,
+});
+const mat = {
+  body: plush('#a6cd68'), cream: plush('#f4e8c1'), spot: plush('#83ad48'), blush: plush('#f29a98'),
+  eye: new THREE.MeshPhysicalMaterial({ color: '#141414', roughness: 0.35, clearcoat: 0.4 }),
+  shine: new THREE.MeshBasicMaterial({ color: '#ffffff' }),
+  thread: new THREE.MeshStandardMaterial({ color: '#3b2f2a', roughness: 0.8 }),
+  tag: new THREE.MeshStandardMaterial({ color: '#f7f7f2', roughness: 0.7, side: THREE.DoubleSide }),
+  metal: new THREE.MeshStandardMaterial({ color: '#d9d9d9', metalness: 1, roughness: 0.25 }),
+};
+
+const model = new THREE.Group();
+const inner = new THREE.Group();
+model.add(inner); scene.add(model);
+const groups = { blush: new THREE.Group(), spots: new THREE.Group(), chain: new THREE.Group(), tag: new THREE.Group() };
+Object.values(groups).forEach(g => inner.add(g));
+
+function finish(m, parent = inner) { m.castShadow = true; m.receiveShadow = true; parent.add(m); return m; }
+function blob(r, s, p, m, parent) {
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(r, 56, 40), m);
+  mesh.scale.set(...s); mesh.position.set(...p);
+  return finish(mesh, parent);
+}
+// 타원체 표면 위의 점과 바깥 방향
+function onSurface(center, radii, dir) {
+  const d = new THREE.Vector3(...dir).normalize();
+  const k = 1 / Math.sqrt((d.x / radii[0]) ** 2 + (d.y / radii[1]) ** 2 + (d.z / radii[2]) ** 2);
+  const p = new THREE.Vector3(...center).addScaledVector(d, k);
+  const n = new THREE.Vector3(d.x / radii[0] ** 2, d.y / radii[1] ** 2, d.z / radii[2] ** 2).normalize();
+  return { p, n };
+}
+function stickTo(mesh, center, radii, dir, lift = 0) {
+  const { p, n } = onSurface(center, radii, dir);
+  mesh.position.copy(p).addScaledVector(n, lift);
+  mesh.lookAt(p.clone().add(n));
+  return mesh;
+}
+const hornGeo = new THREE.LatheGeometry(
+  [[0.19, -0.1], [0.18, 0.2], [0.14, 0.45], [0.09, 0.64], [0.05, 0.74], [0.0, 0.78]].map(([x, y]) => new THREE.Vector2(x, y)), 32);
+function horn(base, dir, s, m = mat.cream) {
+  const h = new THREE.Mesh(hornGeo, m);
+  h.scale.setScalar(1).multiply(new THREE.Vector3(...s));
+  h.position.set(...base);
+  h.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(...dir).normalize());
+  return finish(h);
+}
+
+// 몸통
+const BODY = { c: [0, 0.95, -0.2], r: [1.0, 0.85, 1.15] };
+blob(1, BODY.r, BODY.c, mat.body);
+blob(1, [0.74, 0.6, 0.5], [0, 0.82, 0.38], mat.cream);
+// 머리 · 주둥이
+const HEAD = { c: [0, 1.85, 0.55], r: [1.05, 1.0, 1.05] };
+blob(1, HEAD.r, HEAD.c, mat.body);
+const SNOUT = { c: [0, 1.58, 1.4], r: [0.56, 0.46, 0.6] };
+blob(1, SNOUT.r, SNOUT.c, mat.body);
+// 자수 입
+const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.017, 8, 24, Math.PI), mat.thread);
+mouth.rotation.z = Math.PI;
+mouth.position.set(0, 1.47, 1.955);
+mouth.rotation.x = -0.25;
+finish(mouth);
+
+// 프릴
+const frill = new THREE.Group();
+frill.position.set(0, 2.3, -0.12);
+frill.rotation.x = -0.42;
+inner.add(frill);
+blob(1, [1.55, 1.32, 0.26], [0, 0, 0], mat.body, frill);
+const SCALLOPS = 13;
+for (let i = 0; i < SCALLOPS; i++) {
+  const a = -0.28 + (Math.PI + 0.56) * i / (SCALLOPS - 1);
+  blob(0.24, [1, 1, 0.55], [Math.cos(a) * 1.5, Math.sin(a) * 1.27, -0.02], mat.body, frill);
+}
+// 프릴 테두리 뿔(작은 돌기 2개)
+for (const sx of [-1, 1]) {
+  const h = new THREE.Mesh(hornGeo, mat.cream);
+  h.scale.set(0.9, 0.55, 0.9);
+  h.position.set(sx * 1.62, 0.35, 0);
+  h.rotation.z = -sx * 1.15;
+  finish(h, frill);
+}
+// 프릴 무늬
+for (const [x, y, r] of [[-1.08, 0.32, 0.17], [1.08, 0.32, 0.17], [-0.72, 0.86, 0.15], [0.72, 0.86, 0.15], [0, 1.08, 0.14]]) {
+  const z = 0.26 * Math.sqrt(Math.max(0, 1 - (x / 1.55) ** 2 - (y / 1.32) ** 2));
+  const s = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 20), mat.cream);
+  s.scale.set(1.15, 0.85, 0.3); s.position.set(x, y, z + 0.005);
+  finish(s, groups.spots);
+  frill.add(s);
+}
+
+// 뿔
+horn([-0.42, 2.55, 1.0], [-0.28, 0.85, 0.75], [1, 1.05, 1]);
+horn([0.42, 2.55, 1.0], [0.28, 0.85, 0.75], [1, 1.05, 1]);
+horn([0, 1.95, 1.6], [0, 1, 0.55], [0.75, 0.48, 0.75]);
+
+// 눈 (자수 + 하이라이트)
+for (const sx of [-1, 1]) {
+  const eye = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 24), mat.eye);
+  eye.scale.set(0.85, 1.05, 0.38);
+  stickTo(eye, HEAD.c, HEAD.r, [sx * 0.56, 0.12, 0.82], -0.01);
+  finish(eye);
+  const shine = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 12), mat.shine);
+  shine.position.set(-sx * 0.05 + 0.02, 0.08, 0.17);
+  eye.add(shine);
+  const shine2 = new THREE.Mesh(new THREE.SphereGeometry(0.022, 12, 8), mat.shine);
+  shine2.position.set(sx * 0.05, -0.08, 0.17);
+  eye.add(shine2);
+  // 볼터치
+  const b = new THREE.Mesh(new THREE.SphereGeometry(0.17, 32, 16), mat.blush);
+  b.scale.set(1.3, 0.85, 0.22);
+  stickTo(b, HEAD.c, HEAD.r, [sx * 0.74, -0.24, 0.62], -0.005);
+  finish(b, groups.blush);
+}
+
+// 다리 · 발가락
+const LEGS = [[-0.6, 0.62], [0.6, 0.62], [-0.62, -0.88], [0.62, -0.88]];
+for (const [x, z] of LEGS) {
+  const leg = new THREE.Mesh(new THREE.CapsuleGeometry(0.3, 0.4, 10, 28), mat.body);
+  leg.position.set(x, 0.42, z);
+  finish(leg);
+  for (const dx of [-0.13, 0, 0.13]) blob(0.075, [1, 0.85, 1], [x + dx, 0.17, z + 0.27], mat.cream);
+  // 무릎 무늬
+  const kn = new THREE.Mesh(new THREE.SphereGeometry(0.11, 24, 16), mat.spot);
+  kn.scale.set(1, 1.2, 0.3);
+  kn.position.set(x + Math.sign(x) * 0.29, 0.62, z + 0.03);
+  kn.lookAt(kn.position.clone().add(new THREE.Vector3(Math.sign(x), 0, 0)));
+  finish(kn, groups.spots);
+}
+
+// 꼬리
+horn([0, 0.82, -1.05], [0, 0.32, -1], [2.2, 1.75, 2.0], mat.body);
+
+// 등 무늬
+for (const d of [[-0.5, 0.75, -0.35], [0.5, 0.75, -0.35], [-0.25, 0.85, -0.7], [0.25, 0.85, -0.7], [0, 0.9, -0.1], [-0.75, 0.3, -0.55], [0.75, 0.3, -0.55], [0, 0.6, -0.95]]) {
+  const s = new THREE.Mesh(new THREE.SphereGeometry(0.13 + Math.abs(d[0]) * 0.05, 28, 16), mat.spot);
+  s.scale.set(1.2, 0.9, 0.28);
+  stickTo(s, BODY.c, BODY.r, d, -0.005);
+  finish(s, groups.spots);
+}
+
+// 세탁 라벨
+const tag = new THREE.Mesh(new THREE.PlaneGeometry(0.22, 0.36), mat.tag);
+{
+  const { p, n } = onSurface(BODY.c, BODY.r, [1, -0.15, -0.6]);
+  tag.position.copy(p).addScaledVector(n, 0.02).add(new THREE.Vector3(0, -0.12, 0));
+  tag.lookAt(tag.position.clone().add(n));
+  tag.rotation.z += 0.15;
+}
+finish(tag, groups.tag);
+
+// 볼체인 고리
+{
+  const top = new THREE.Vector3(0, 2.3 + 1.32 * Math.cos(0.42) + 0.15, -0.12 - 1.32 * Math.sin(0.42));
+  const loop = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.025, 12, 32), mat.metal);
+  loop.position.copy(top).add(new THREE.Vector3(0, 0.08, 0));
+  finish(loop, groups.chain);
+  for (let i = 0; i < 9; i++) {
+    const t = i / 8, a = t * Math.PI;
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 8), mat.metal);
+    ball.position.set(Math.cos(a) * 0.32, 0.25 + Math.sin(a) * 0.55, 0).add(top);
+    finish(ball, groups.chain);
+  }
+}
+
+// 바닥에 앉히고 중심 맞추기
+const fullBox = new THREE.Box3().setFromObject(inner);
+inner.position.y = -fullBox.min.y;
+inner.position.z = -(fullBox.min.z + fullBox.max.z) / 2 * 0.6;
+
+// UI
+const $ = (id) => document.getElementById(id);
+const inputs = { body: $('c-body'), cream: $('c-cream'), spot: $('c-spot'), blush: $('c-blush') };
+const waysEl = $('ways');
+let current = 0;
+function applyWay(i) {
+  current = i;
+  const w = WAYS[i];
+  for (const k of Object.keys(inputs)) { inputs[k].value = w[k]; mat[k].color.set(w[k]); }
+  waysEl.querySelectorAll('.way').forEach((b, j) => b.setAttribute('aria-pressed', String(j === i)));
+}
+WAYS.forEach((w, i) => {
+  const b = document.createElement('button');
+  b.className = 'way'; b.type = 'button'; b.id = 'way-' + i;
+  b.innerHTML = `<i style="background:${w.body}"></i>${w.name}`;
+  b.addEventListener('click', () => applyWay(i));
+  waysEl.append(b);
+});
+for (const k of Object.keys(inputs)) {
+  inputs[k].addEventListener('input', (e) => {
+    mat[k].color.set(e.target.value);
+    waysEl.querySelectorAll('.way').forEach(b => b.setAttribute('aria-pressed', 'false'));
+  });
+}
+const toggles = { 't-blush': 'blush', 't-spots': 'spots', 't-chain': 'chain', 't-tag': 'tag' };
+for (const [id, g] of Object.entries(toggles)) {
+  const el = $(id);
+  const sync = () => {
+    groups[g].visible = el.checked;
+    // 프릴 무늬는 frill 하위에 있어서 따로 토글
+    if (g === 'spots') frill.children.forEach(c => { if (c.material === mat.cream && c.scale.z < 0.4) c.visible = el.checked; });
+    updateDims();
+  };
+  el.addEventListener('change', sync);
+}
+$('t-rot').addEventListener('change', (e) => { controls.autoRotate = e.target.checked; });
+
+function updateDims() {
+  const box = new THREE.Box3().setFromObject(inner);
+  const size = box.getSize(new THREE.Vector3());
+  const cm = Number($('size').value);
+  const k = cm / size.y;
+  const f = (v) => (v * k).toFixed(1) + ' cm';
+  $('d-h').textContent = f(size.y);
+  $('d-l').textContent = f(size.z);
+  $('d-w').textContent = f(size.x);
+  $('size-out').textContent = cm + ' cm';
+  $('badge').textContent = `높이 ${cm} cm · 길이 ${(size.z * k).toFixed(0)} cm`;
+  $('d-cls').textContent = cm <= 13 ? '키링 · 소형 경품' : cm <= 22 ? '일반 크레인 경품' : '대형 (빅 크레인)';
+}
+$('size').addEventListener('input', updateDims);
+
+// 누르면 말랑
+const ray = new THREE.Raycaster();
+let squish = 0, downAt = null;
+renderer.domElement.addEventListener('pointerdown', (e) => { downAt = [e.clientX, e.clientY]; });
+renderer.domElement.addEventListener('pointerup', (e) => {
+  if (!downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 5) return;
+  const r = renderer.domElement.getBoundingClientRect();
+  ray.setFromCamera(new THREE.Vector2((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1), camera);
+  if (ray.intersectObject(inner, true).length) squish = 1;
+});
+
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  // 화면 비율에 맞춰 인형 전체가 들어오도록 거리 조정
+  const dist = 9.6 / Math.pow(Math.min(1, camera.aspect), 0.85);
+  const dir = camera.position.clone().sub(controls.target).normalize();
+  camera.position.copy(controls.target).addScaledVector(dir, dist);
+  controls.maxDistance = Math.max(14, dist * 1.4);
+}
+new ResizeObserver(resize).observe(stage);
+resize();
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const t = clock.getElapsedTime();
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const breathe = reduce ? 0 : Math.sin(t * 2.2) * 0.012;
+  squish = Math.max(0, squish - 0.035);
+  const s = Math.sin((1 - squish) * Math.PI * 3) * squish * 0.12;
+  model.scale.set(1 + s * 0.6 - breathe * 0.5, 1 - s + breathe, 1 + s * 0.6 - breathe * 0.5);
+  controls.update();
+  renderer.render(scene, camera);
+});
+
+applyWay(0);
+groups.chain.visible = false;
+updateDims();
+</script>
