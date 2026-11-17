@@ -1,6 +1,6 @@
 // 홈 화면 앱: 한 번 열어 두면 인터넷이 없어도 놀 수 있게 파일을 기기에 보관해요.
 // 카메라 영상은 여기를 지나가지 않아요 (영상은 네트워크로 보내지 않아요).
-const CACHE = "mugunghwa-v1";
+const CACHE = "mugunghwa-v2";
 const CORE = [
   "./",
   "./index.html",

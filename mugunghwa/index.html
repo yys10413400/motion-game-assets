@@ -228,6 +228,7 @@
   <div class="panel">
     <h2 class="otitle" data-t="카메라가 안 보여요">카메라가 안 보여요</h2>
     <p class="sub" id="camErrText">카메라를 쓸 수 있게 허락해 주세요.</p>
+    <p class="note" id="camErrCode"></p>
     <div class="btn-row">
       <button class="small-btn" data-go-home>처음으로</button>
       <button class="big-btn" id="retryBtn">다시 해 보기</button>
@@ -384,11 +385,24 @@ async function loadPose(onProgress) {
   try { landmarker = await make("GPU"); } catch (e) { landmarker = await make("CPU"); }
   onProgress(1, "준비 끝!");
 }
+// 카카오톡·인스타그램 같은 앱 안의 브라우저는 카메라를 막는 경우가 많아요
+const IN_APP = /KAKAOTALK|Instagram|FBAN|FBAV|NAVER|Line\/|DaumApps|everytimeApp|; wv\)/i.test(navigator.userAgent);
 async function startCamera() {
   if (camReady && video.srcObject) return;
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }, audio: false,
-  });
+  if (!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    const e = new Error("no mediaDevices"); e.name = "NoMediaDevices"; throw e;
+  }
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }, audio: false,
+    });
+  } catch (e) {
+    if (e.name === "NotAllowedError" || e.name === "SecurityError") throw e;
+    // 조건을 못 맞추는 웹캠, 잠깐 바빴던 카메라: 잠시 뒤 가장 단순한 조건으로 한 번 더
+    await new Promise(r => setTimeout(r, 600));
+    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+  }
   video.srcObject = stream;
   await video.play().catch(() => {});
   await new Promise(r => video.readyState >= 2 ? r() : video.addEventListener("loadeddata", r, { once: true }));
@@ -507,25 +521,56 @@ $("startBtn").onclick = async () => {
   if (hasSpeech) { const u = new SpeechSynthesisUtterance(""); speechSynthesis.speak(u); } // 소리 잠금 풀기
   G.screen = "loading"; show("loading");
   const bar = $("loadBar"), txt = $("loadText");
+  txt.textContent = "카메라 켜는 중… 📷"; bar.style.width = "5%";
+  // 허용 창이 떠 있는데 못 보고 지나치는 경우가 많아서, 조금 기다려도 안 켜지면 알려 줘요
+  const askHint = setTimeout(() => {
+    if (!camReady) txt.textContent = "👆 화면 위쪽(주소창 근처)에 뜬 '카메라 허용'을 눌러 주세요";
+  }, 2500);
   try {
     await startCamera();
   } catch (e) {
-    G.screen = "camErr"; show("camErr");
-    $("camErrText").textContent = e && e.name === "NotAllowedError"
-      ? "카메라 허락이 꺼져 있어요. 주소창 옆 카메라 아이콘을 눌러 '허용'으로 바꿔 주세요."
-      : "카메라를 찾지 못했어요. 다른 앱이 카메라를 쓰고 있지 않은지 확인해 주세요.";
+    clearTimeout(askHint);
+    console.error(e);
+    showCamError(e);
     return;
   }
+  clearTimeout(askHint);
   try {
     await loadPose((f, t) => { bar.style.width = Math.round(f * 100) + "%"; txt.textContent = t; });
   } catch (e) {
     console.error(e);
-    G.screen = "camErr"; show("camErr");
-    $("camErrText").textContent = "몸 인식 준비에 실패했어요. 페이지를 새로 고침해 주세요.";
+    showCamError(e, true);
     return;
   }
   enterReady();
 };
+function showCamError(e, poseFailed = false) {
+  G.screen = "camErr"; show("camErr");
+  const name = (e && e.name) || "Error";
+  const isPhone = /Android|iPhone|iPad/i.test(navigator.userAgent);
+  let title = "카메라가 안 켜져요", text;
+  if (poseFailed) {
+    title = "술래 준비가 안 됐어요";
+    text = "몸 인식 파일을 불러오지 못했어요. 인터넷 연결을 확인하고 새로 고침해 주세요.";
+  } else if (IN_APP) {
+    text = "카카오톡·인스타그램 같은 앱 안에서는 카메라가 막혀 있어요. 오른쪽 위 메뉴(⋮ 또는 ···)에서 '다른 브라우저로 열기'를 눌러 크롬이나 사파리로 열어 주세요.";
+  } else if (name === "NoMediaDevices") {
+    text = "이 브라우저에서는 카메라를 쓸 수 없어요. 크롬·엣지·사파리로 https:// 주소를 열어 주세요.";
+  } else if (name === "NotAllowedError" || name === "SecurityError") {
+    text = isPhone
+      ? "카메라 허용이 꺼져 있어요. 주소창 왼쪽 아이콘(🔒 또는 ⚙)을 눌러 '카메라 → 허용'으로 바꾼 뒤 '다시 해 보기'를 눌러 주세요. 그래도 안 되면 휴대폰 설정 → 앱 → 브라우저 → 권한에서 카메라를 켜 주세요."
+      : "카메라 허용이 꺼져 있어요. 주소창 왼쪽 자물쇠(🔒)를 눌러 '카메라 → 허용'으로 바꾼 뒤 새로 고침(F5) 해 주세요. 윈도우 설정 → 개인 정보 → 카메라에서 '앱이 카메라에 액세스'도 켜져 있어야 해요.";
+  } else if (name === "NotReadableError" || name === "AbortError" || name === "TrackStartError") {
+    text = "다른 창이나 프로그램이 카메라를 쓰고 있어요. '손으로 놀자' 창, 다른 탭, 줌·팀즈 등을 닫고 '다시 해 보기'를 눌러 주세요.";
+  } else if (name === "NotFoundError" || name === "OverconstrainedError" || name === "DevicesNotFoundError") {
+    text = "카메라를 찾지 못했어요. 웹캠이 연결되어 있는지 확인해 주세요.";
+  } else {
+    text = "카메라를 켤 수 없어요. 새로 고침해 보거나 다른 브라우저로 열어 주세요.";
+  }
+  const h = $("camErr").querySelector("h2"); h.textContent = title; h.dataset.t = title;
+  $("camErrText").textContent = text;
+  $("camErrCode").textContent = "(오류 이름: " + name + ")";
+}
 $("retryBtn").onclick = () => $("startBtn").onclick();
 document.querySelectorAll("[data-go-home]").forEach(b => b.onclick = goHome);
 $("againBtn").onclick = () => { sfx.tick(); enterReady(); };
